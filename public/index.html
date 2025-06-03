@@ -12,6 +12,9 @@
     <button type="submit">Se connecter</button>
   </form>
 
+  <!-- 🔗 Lien vers la page d'inscription -->
+  <p>Pas encore de compte ? <a href="/register.html">Créer un compte</a></p>
+
   <div id="chat-section" style="display:none;">
     <h2>Envoyer un message</h2>
     <textarea id="message" placeholder="Votre message"></textarea><br />
@@ -39,6 +42,7 @@
       if (res.ok) {
         token = data.token;
         document.getElementById('login-form').style.display = 'none';
+        document.querySelector('p').style.display = 'none';
         document.getElementById('chat-section').style.display = 'block';
         document.getElementById('response').textContent = 'Connecté en tant que ' + username;
       } else {
@@ -71,4 +75,3 @@
   </script>
 </body>
 </html>
-
