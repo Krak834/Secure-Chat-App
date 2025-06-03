@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const router = express.Router();
 
 const USERS = {
-  alice: 'password123',  // exemple simple (à ne pas faire en prod)
+  alice: 'password123',
   bob: 'mypassword'
 };
 
