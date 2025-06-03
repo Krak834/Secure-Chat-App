@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Chat sécurisé avec JWT</title>
+</head>
+<body>
+  <h1>Connexion</h1>
+  <form id="login-form">
+    <input type="text" id="username" placeholder="Nom d'utilisateur" required />
+    <input type="password" id="password" placeholder="Mot de passe" required />
+    <button type="submit">Se connecter</button>
+  </form>
+
+  <div id="chat-section" style="display:none;">
+    <h2>Envoyer un message</h2>
+    <textarea id="message" placeholder="Votre message"></textarea><br />
+    <button id="send-btn">Envoyer</button>
+  </div>
+
+  <pre id="response"></pre>
+
+  <script>
+    let token = null;
+
+    // Login
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      const res = await fetch('/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        token = data.token;
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('chat-section').style.display = 'block';
+        document.getElementById('response').textContent = 'Connecté en tant que ' + username;
+      } else {
+        document.getElementById('response').textContent = 'Erreur : ' + (data.error || 'Login failed');
+      }
+    });
+
+    // Envoyer message
+    document.getElementById('send-btn').addEventListener('click', async () => {
+      const message = document.getElementById('message').value.trim();
+      if (!message) return alert('Message vide');
+
+      const res = await fetch('/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({ message })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+        document.getElementById('message').value = '';
+      } else {
+        document.getElementById('response').textContent = 'Erreur : ' + (data.error || 'Message non envoyé');
+      }
+    });
+  </script>
+</body>
+</html>
+
