@@ -3,7 +3,7 @@ const router = express.Router();
 
 router.post('/', (req, res) => {
   const message = req.body.message;
-  const username = req.user?.username;  // username récupéré du token JWT
+  const username = req.user?.username;
 
   if (!message) {
     return res.status(400).json({ error: 'Message manquant' });
